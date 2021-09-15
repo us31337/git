@@ -43,6 +43,8 @@
     "devServerPort": 9060,
     "clientTheme": "none",
     "clientThemeVariant": "",
-    "reactive": false
+    "reactive": false,
+    "lastLiquibaseTimestamp": 1631715504000,
+    "entities": ["Specialization"]
   }
 }
