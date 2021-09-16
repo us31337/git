@@ -14,6 +14,8 @@ import passwordReset from 'app/modules/account/password-reset/password-reset.red
 import specialization from 'app/entities/specialization/specialization.reducer';
 // prettier-ignore
 import nosology from 'app/entities/nosology/nosology.reducer';
+// prettier-ignore
+import document from 'app/entities/document/document.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 const rootReducer = {
@@ -28,6 +30,7 @@ const rootReducer = {
   settings,
   specialization,
   nosology,
+  document,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar,
 };

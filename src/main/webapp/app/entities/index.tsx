@@ -6,6 +6,7 @@ import ErrorBoundaryRoute from 'app/shared/error/error-boundary-route';
 
 import Specialization from './specialization';
 import Nosology from './nosology';
+import Document from './document';
 /* jhipster-needle-add-route-import - JHipster will add routes here */
 
 const Routes = ({ match }) => (
@@ -14,6 +15,7 @@ const Routes = ({ match }) => (
       {/* prettier-ignore */}
       <ErrorBoundaryRoute path={`${match.url}specialization`} component={Specialization} />
       <ErrorBoundaryRoute path={`${match.url}nosology`} component={Nosology} />
+      <ErrorBoundaryRoute path={`${match.url}document`} component={Document} />
       {/* jhipster-needle-add-route-path - JHipster will add routes here */}
     </Switch>
   </div>
