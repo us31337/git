@@ -53,6 +53,7 @@ public class CacheConfiguration {
             createCache(cm, com.srgcro.feasbase.domain.Authority.class.getName());
             createCache(cm, com.srgcro.feasbase.domain.User.class.getName() + ".authorities");
             createCache(cm, com.srgcro.feasbase.domain.Specialization.class.getName());
+            createCache(cm, com.srgcro.feasbase.domain.Nosology.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

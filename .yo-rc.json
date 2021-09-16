@@ -44,7 +44,7 @@
     "clientTheme": "none",
     "clientThemeVariant": "",
     "reactive": false,
-    "lastLiquibaseTimestamp": 1631715504000,
-    "entities": ["Specialization"]
+    "lastLiquibaseTimestamp": 1631780831000,
+    "entities": ["Specialization", "Nosology"]
   }
 }
