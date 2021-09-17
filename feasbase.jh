@@ -1,0 +1,65 @@
+enum Country {
+	RUS, UKR, KAZ
+}
+
+enum ContactRole {
+	COORDINATOR, PI
+}
+
+enum ContactType {
+	PHONE, EMAIL
+}
+
+entity Contact {
+	type ContactType
+    body String
+}
+
+entity Person {
+	firstName String
+    middleName String
+    surname String
+    country Country
+    contactRole ContactRole
+}
+
+relationship OneToMany {
+	Person{contacts} to Contact
+}
+
+entity Site {
+	name String
+}
+
+entity Document {
+	name String
+    uuid String
+    path String
+    uploadTime Instant
+    user User
+}
+
+relationship OneToMany {
+	Site{persons} to Person
+    Site{documents} to Document
+}
+
+entity Nosology {
+	name String
+}
+
+entity Specialization {
+	name String
+}
+
+relationship OneToMany {
+	Person{nosologies} to Nosology
+    Person{specialisations} to Specialization
+    Person{documents} to Document
+}
+
+service all
+dto * with mapstruct
+
+
+
