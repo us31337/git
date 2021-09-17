@@ -45,7 +45,20 @@ export const createEntity = createAsyncThunk(
 export const updateEntity = createAsyncThunk(
   'document/update_entity',
   async (entity: IDocument, thunkAPI) => {
-    const result = await axios.put<IDocument>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
+    let tmp = cleanEntity(entity);
+    let formData = new FormData();
+    formData.append("file", tmp.file);
+    delete tmp.file;
+    console.log(tmp);
+    // @ts-ignore
+    formData.append("entity", JSON.stringify(tmp));
+    // const result = await axios.put<IDocument>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
+    const result = await axios.put<IDocument>(`${apiUrl}/${entity.id}`,
+      formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
     thunkAPI.dispatch(getEntities({}));
     return result;
   },

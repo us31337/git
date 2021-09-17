@@ -1,5 +1,7 @@
 package com.srgcro.feasbase.web.rest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.srgcro.feasbase.repository.DocumentRepository;
 import com.srgcro.feasbase.service.DocumentService;
 import com.srgcro.feasbase.service.dto.DocumentDTO;
@@ -7,6 +9,7 @@ import com.srgcro.feasbase.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +19,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
@@ -46,9 +51,12 @@ public class DocumentResource {
 
     private final DocumentRepository documentRepository;
 
-    public DocumentResource(DocumentService documentService, DocumentRepository documentRepository) {
+    private ObjectMapper mapper;
+
+    public DocumentResource(DocumentService documentService, DocumentRepository documentRepository, ObjectMapper mapper) {
         this.documentService = documentService;
         this.documentRepository = documentRepository;
+        this.mapper = mapper;
     }
 
     /**
@@ -64,6 +72,9 @@ public class DocumentResource {
         if (documentDTO.getId() != null) {
             throw new BadRequestAlertException("A new document cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        if (Objects.isNull(documentDTO.getUser())) {
+            throw new BadRequestAlertException("Invalid association value provided", ENTITY_NAME, "null");
+        }
         DocumentDTO result = documentService.save(documentDTO);
         return ResponseEntity
             .created(new URI("/api/documents/" + result.getId()))
@@ -71,21 +82,37 @@ public class DocumentResource {
             .body(result);
     }
 
+    //    just for tests
+    /*@PutMapping(value = "/documents/{id}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<DocumentDTO> uploadFile(
+        @PathVariable(value = "id", required = false) final Long id,
+        @RequestPart(value = "entity", required = false) String string,
+        @RequestPart(required = false) MultipartFile file
+    ) throws URISyntaxException, JsonProcessingException {
+        DocumentDTO dto = mapper.readValue(string, DocumentDTO.class);
+        log.debug("REST request to update Document : {}, {}", id);
+        log.debug("Received data", file);
+        log.debug("Received data", dto);
+        return null;
+    }
+*/
     /**
      * {@code PUT  /documents/:id} : Updates an existing document.
      *
-     * @param id the id of the documentDTO to save.
+     * @param id          the id of the documentDTO to save.
      * @param documentDTO the documentDTO to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated documentDTO,
      * or with status {@code 400 (Bad Request)} if the documentDTO is not valid,
      * or with status {@code 500 (Internal Server Error)} if the documentDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/documents/{id}")
-    public ResponseEntity<DocumentDTO> updateDocument(
+    @PutMapping(value = "/documents/{id}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<DocumentDTO> uploadFile(
         @PathVariable(value = "id", required = false) final Long id,
-        @Valid @RequestBody DocumentDTO documentDTO
-    ) throws URISyntaxException {
+        @RequestPart(value = "entity", required = false) String string,
+        @RequestPart(required = false) MultipartFile file
+    ) throws URISyntaxException, JsonProcessingException {
+        DocumentDTO documentDTO = mapper.readValue(string, DocumentDTO.class);
         log.debug("REST request to update Document : {}, {}", id, documentDTO);
         if (documentDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
@@ -98,6 +125,8 @@ public class DocumentResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
+//      TODO: some logic for saving file, generate UUID
+
         DocumentDTO result = documentService.save(documentDTO);
         return ResponseEntity
             .ok()
@@ -108,7 +137,7 @@ public class DocumentResource {
     /**
      * {@code PATCH  /documents/:id} : Partial updates given fields of an existing document, field will ignore if it is null
      *
-     * @param id the id of the documentDTO to save.
+     * @param id          the id of the documentDTO to save.
      * @param documentDTO the documentDTO to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated documentDTO,
      * or with status {@code 400 (Bad Request)} if the documentDTO is not valid,

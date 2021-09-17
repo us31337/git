@@ -5,13 +5,14 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.UUID;
 
 /**
@@ -25,8 +26,6 @@ public class Document implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
     @NotNull
@@ -38,6 +37,14 @@ public class Document implements Serializable {
 
     @Column(name = "uuid")
     private UUID uuid;
+
+    @Column(name = "change_time")
+    private Instant changeTime;
+
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "id")
+    private User user;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -92,6 +99,32 @@ public class Document implements Serializable {
         this.uuid = uuid;
     }
 
+    public Instant getChangeTime() {
+        return this.changeTime;
+    }
+
+    public Document changeTime(Instant changeTime) {
+        this.changeTime = changeTime;
+        return this;
+    }
+
+    public void setChangeTime(Instant changeTime) {
+        this.changeTime = changeTime;
+    }
+
+    public User getUser() {
+        return this.user;
+    }
+
+    public Document user(User user) {
+        this.setUser(user);
+        return this;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -119,6 +152,7 @@ public class Document implements Serializable {
             ", name='" + getName() + "'" +
             ", path='" + getPath() + "'" +
             ", uuid='" + getUuid() + "'" +
+            ", changeTime='" + getChangeTime() + "'" +
             "}";
     }
 }

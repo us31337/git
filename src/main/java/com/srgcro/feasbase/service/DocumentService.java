@@ -2,6 +2,7 @@ package com.srgcro.feasbase.service;
 
 import com.srgcro.feasbase.domain.Document;
 import com.srgcro.feasbase.repository.DocumentRepository;
+import com.srgcro.feasbase.repository.UserRepository;
 import com.srgcro.feasbase.service.dto.DocumentDTO;
 import com.srgcro.feasbase.service.mapper.DocumentMapper;
 import org.slf4j.Logger;
@@ -27,9 +28,12 @@ public class DocumentService {
 
     private final DocumentMapper documentMapper;
 
-    public DocumentService(DocumentRepository documentRepository, DocumentMapper documentMapper) {
+    private final UserRepository userRepository;
+
+    public DocumentService(DocumentRepository documentRepository, DocumentMapper documentMapper, UserRepository userRepository) {
         this.documentRepository = documentRepository;
         this.documentMapper = documentMapper;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -41,6 +45,8 @@ public class DocumentService {
     public DocumentDTO save(DocumentDTO documentDTO) {
         log.debug("Request to save Document : {}", documentDTO);
         Document document = documentMapper.toEntity(documentDTO);
+        Long userId = documentDTO.getUser().getId();
+        userRepository.findById(userId).ifPresent(document::user);
         document = documentRepository.save(document);
         return documentMapper.toDto(document);
     }

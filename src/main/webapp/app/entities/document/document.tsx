@@ -1,9 +1,11 @@
 import React, {useEffect} from 'react';
 import {Link, RouteComponentProps} from 'react-router-dom';
 import {Button, Table} from 'reactstrap';
+import {TextFormat} from 'react-jhipster';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 import {getEntities} from './document.reducer';
+import {APP_DATE_FORMAT} from 'app/config/constants';
 import {useAppDispatch, useAppSelector} from 'app/config/store';
 
 export const Document = (props: RouteComponentProps<{ url: string }>) => {
@@ -45,6 +47,8 @@ export const Document = (props: RouteComponentProps<{ url: string }>) => {
                 <th>Name</th>
                 <th>Path</th>
                 <th>Uuid</th>
+                <th>Change Time</th>
+                <th>User</th>
                 <th />
               </tr>
             </thead>
@@ -59,6 +63,8 @@ export const Document = (props: RouteComponentProps<{ url: string }>) => {
                   <td>{document.name}</td>
                   <td>{document.path}</td>
                   <td>{document.uuid}</td>
+                  <td>{document.changeTime ? <TextFormat type="date" value={document.changeTime} format={APP_DATE_FORMAT} /> : null}</td>
+                  <td>{document.user ? document.user.login : ''}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${document.id}`} color="info" size="sm" data-cy="entityDetailsButton">

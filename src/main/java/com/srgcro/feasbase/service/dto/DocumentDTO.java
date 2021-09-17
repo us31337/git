@@ -2,6 +2,7 @@ package com.srgcro.feasbase.service.dto;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -18,6 +19,10 @@ public class DocumentDTO implements Serializable {
     private String path;
 
     private UUID uuid;
+
+    private Instant changeTime;
+
+    private UserDTO user;
 
     public Long getId() {
         return id;
@@ -51,6 +56,22 @@ public class DocumentDTO implements Serializable {
         this.uuid = uuid;
     }
 
+    public Instant getChangeTime() {
+        return changeTime;
+    }
+
+    public void setChangeTime(Instant changeTime) {
+        this.changeTime = changeTime;
+    }
+
+    public UserDTO getUser() {
+        return user;
+    }
+
+    public void setUser(UserDTO user) {
+        this.user = user;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -80,6 +101,8 @@ public class DocumentDTO implements Serializable {
             ", name='" + getName() + "'" +
             ", path='" + getPath() + "'" +
             ", uuid='" + getUuid() + "'" +
+            ", changeTime='" + getChangeTime() + "'" +
+            ", user=" + getUser() +
             "}";
     }
 }

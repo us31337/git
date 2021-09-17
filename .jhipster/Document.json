@@ -12,9 +12,23 @@
     {
       "fieldName": "uuid",
       "fieldType": "UUID"
+    },
+    {
+      "fieldName": "changeTime",
+      "fieldType": "Instant"
     }
   ],
-  "relationships": [],
+  "relationships": [
+    {
+      "relationshipName": "user",
+      "otherEntityName": "user",
+      "relationshipType": "one-to-one",
+      "otherEntityField": "login",
+      "ownerSide": true,
+      "id": true,
+      "otherEntityRelationshipName": "document"
+    }
+  ],
   "service": "serviceClass",
   "dto": "mapstruct",
   "jpaMetamodelFiltering": false,
