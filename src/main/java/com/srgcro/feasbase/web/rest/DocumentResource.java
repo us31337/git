@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.srgcro.feasbase.repository.DocumentRepository;
 import com.srgcro.feasbase.service.DocumentService;
+import com.srgcro.feasbase.service.HandleFileAction;
 import com.srgcro.feasbase.service.dto.DocumentDTO;
 import com.srgcro.feasbase.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
@@ -53,10 +54,13 @@ public class DocumentResource {
 
     private ObjectMapper mapper;
 
-    public DocumentResource(DocumentService documentService, DocumentRepository documentRepository, ObjectMapper mapper) {
+    private HandleFileAction handleFileAction;
+
+    public DocumentResource(DocumentService documentService, DocumentRepository documentRepository, ObjectMapper mapper, HandleFileAction handleFileAction) {
         this.documentService = documentService;
         this.documentRepository = documentRepository;
         this.mapper = mapper;
+        this.handleFileAction = handleFileAction;
     }
 
     /**
@@ -126,6 +130,9 @@ public class DocumentResource {
         }
 
 //      TODO: some logic for saving file, generate UUID
+        String path = handleFileAction.saveFile(file, documentDTO.getUuid());
+        documentDTO.setPath(path);
+        log.debug(path);
 
         DocumentDTO result = documentService.save(documentDTO);
         return ResponseEntity
